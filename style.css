@@ -1,0 +1,12 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	gap: 10px;
+}
+
+.card {
+	min-height: 100%;
+	border: 1px solid;
+	background-color: rgb(199, 191, 191);
+}
