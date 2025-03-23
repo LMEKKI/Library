@@ -1,4 +1,4 @@
-const myLibrary = [];
+let myLibrary = [];
 const cardcontainer = document.querySelector(".card-container");
 const form = document.querySelector("#form-add-book");
 
@@ -11,9 +11,8 @@ openDialogButton.addEventListener("click", () => {
 	dialog.showModal();
 });
 
-// Form cancel button closes the dialog box
 cancelButton.addEventListener("click", () => {
-	dialog.close("animalNotChosen");
+	dialog.close();
 });
 
 confirmButton.addEventListener("click", (e) => {
@@ -37,42 +36,61 @@ function submitBookForm() {
 	const read = document.querySelector("#read").checked;
 	addBookToLibrary(author, title, pages, read);
 	dialog.close();
-	displayBooks();
+	alert("Book added!");
 }
 
 function createCard(book) {
 	const card = document.createElement("Div");
+	card.id = book.id;
 	const title = document.createElement("p");
 	const author = document.createElement("p");
 	const pages = document.createElement("p");
-	const read = document.createElement("p");
+	const read = document.createElement("input");
+	read.setAttribute("type", "checkbox");
 	const deleteButton = document.createElement("button");
 	deleteButton.textContent = "Delete";
+	deleteButton.addEventListener("click", (e) => {});
+
+	read.addEventListener("click", (e) => {
+		const id = e.target.parentElement.id;
+
+		changeBookread(id);
+	});
 
 	card.classList.add("card", book.id);
-	card.appendChild(title, author, pages, read);
+	{
+		title;
+	}
+	card.append(title, author, pages, read, deleteButton);
 	title.textContent = book.title;
 	author.textContent = book.author;
 	pages.textContent = book.pages;
-	read.textContent = book.read;
-	cardcontainer.append(card);
+	read.checked = book.read;
+
+	myLibrary.map((book) => {
+		if (card.className != book.id) {
+			cardcontainer.append(card);
+		}
+	});
 }
 
-function displayBooks() {
-	const listOfCard = Array.from(cardcontainer.children);
+function changeBookread(id) {
+	console.log(id);
 
-	cardcontainer.replaceChildren();
-	myLibrary.map((book) => {
-		listOfCard.map((card) => {
-			if (card.className != book.id) {
-				createCard(book);
-			}
-		});
+	let temp = myLibrary.map((card) => {
+		if (card.id == id) {
+			card.read = !card.read;
+			return card;
+		}
 	});
+	console.log(myLibrary);
+	myLibrary = temp;
 }
 
 function addBookToLibrary(author, title, pages, read) {
 	id = crypto.randomUUID();
 	const book = new Book(author, title, pages, read, id);
 	myLibrary.push(book);
+
+	createCard(book);
 }
